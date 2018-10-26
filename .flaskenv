@@ -1,0 +1,2 @@
+FLASK_APP=mercuri
+FLASK_ENV=development

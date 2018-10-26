@@ -1,0 +1,1 @@
+from mercuri import app
