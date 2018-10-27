@@ -1,7 +1,9 @@
 import os
 
-from flask import Flask
-from config import Config
+from flask import Flask, render_template
+from mercuri.config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 
 def create_app(test_config=None):
@@ -22,9 +24,18 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
+    from mercuri.blueprints import auth
+    app.register_blueprint(auth.bp)
+
+    # index page
     @app.route('/')
-    def hello():
-        return 'Mecuri lives...from __init__.py'
+    @app.route('/index')
+    def index():
+        return render_template('index.html')
 
     return app
+
+
+app = create_app()
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
