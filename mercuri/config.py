@@ -1,7 +1,7 @@
 import os
-from mercuri.__init__ import app
+from flask import Flask
 # basedir = os.path.abspath(os.path.dirname(__file__))
-basedir = app.instance_path
+basedir = Flask(__name__).instance_path
 
 
 class Config(object):
