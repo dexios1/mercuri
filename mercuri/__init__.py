@@ -3,7 +3,6 @@ import os
 from flask import Flask, render_template
 from mercuri.config import Config
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 
 
 def create_app(test_config=None):
@@ -27,13 +26,8 @@ def create_app(test_config=None):
     from mercuri.blueprints import auth
     app.register_blueprint(auth.bp)
 
-    # index page
-    @app.route('/')
-    @app.route('/index')
-    def index():
-        return render_template('index.html')
     return app
 
 
 def get_db():
-    return SQLAlchemy(create_app())s
+    return SQLAlchemy(create_app())
