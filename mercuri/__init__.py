@@ -32,17 +32,8 @@ def create_app(test_config=None):
     @app.route('/index')
     def index():
         return render_template('index.html')
-
     return app
 
 
 def get_db():
-    return SQLAlchemy(create_app())
-
-
-def get_migrate():
-    return Migrate(create_app(), get_db())
-
-
-# db = SQLAlchemy(create_app())
-# migrate = Migrate(create_app(), db)
+    return SQLAlchemy(create_app())s
