@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask
 from mercuri.config import Config
 from flask_sqlalchemy import SQLAlchemy
 
