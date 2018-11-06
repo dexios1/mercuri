@@ -1,8 +1,7 @@
 import os
-
-from flask import Flask, render_template
+from flask import Flask
 from mercuri.config import Config
-from flask_login import LoginManager, login_required
+from flask_login import LoginManager
 
 login = LoginManager()
 
@@ -27,13 +26,6 @@ def create_app(test_config=None):
 
     from mercuri.blueprints import auth
     app.register_blueprint(auth.bp)
-
-    # index page
-    @app.route('/')
-    @app.route('/index')
-    @login_required
-    def index():
-        return render_template('index.html')
 
     return app
 
