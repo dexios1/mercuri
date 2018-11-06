@@ -2,8 +2,9 @@ import os
 
 from flask import Flask, render_template
 from mercuri.config import Config
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask_login import LoginManager, login_required
+
+login = LoginManager()
 
 
 def create_app(test_config=None):
@@ -30,19 +31,11 @@ def create_app(test_config=None):
     # index page
     @app.route('/')
     @app.route('/index')
+    @login_required
     def index():
         return render_template('index.html')
 
     return app
 
 
-def get_db():
-    return SQLAlchemy(create_app())
 
-
-def get_migrate():
-    return Migrate(create_app(), get_db())
-
-
-# db = SQLAlchemy(create_app())
-# migrate = Migrate(create_app(), db)
