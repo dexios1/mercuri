@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
+from flask import Blueprint, render_template, flash, redirect, url_for, request
 from mercuri.forms.login import LoginForm
 from flask_login import login_user, current_user, logout_user
+from werkzeug.urls import url_parse
 from mercuri.models.user import User
 
 bp = Blueprint('auth', __name__)
