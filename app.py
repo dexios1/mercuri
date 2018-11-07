@@ -1,12 +1,28 @@
-from mercuri.__init__ import create_app, get_db, get_migrate
+from flask import render_template
+from mercuri import create_app
 from flask_migrate import Migrate
+from flask_login import login_required
 
 
 app = create_app()
-db = get_db()
+from mercuri.models import db
+db.init_app(app)
 # register models and push migration
 from mercuri.models.user import User
 migrate = Migrate(app, db)
+
+# configure login Manager
+from mercuri import login
+login.init_app(app)
+login.login_view = 'auth.login'
+
+
+# index page
+@app.route('/')
+@app.route('/index')
+@login_required
+def index():
+    return render_template('index.html')
 
 
 @app.shell_context_processor
