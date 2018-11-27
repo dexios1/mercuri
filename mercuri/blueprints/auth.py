@@ -5,6 +5,7 @@ from flask_login import login_user, current_user, logout_user
 from werkzeug.urls import url_parse
 from mercuri.models import db
 from mercuri.models.user import User
+from datetime import datetime
 
 bp = Blueprint('auth', __name__)
 
@@ -40,10 +41,18 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(username='dexios1', email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
         flash('Thanks for registering, {}. You can login in now'.format(user.username))
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', title='Register', form=form)
+
+
+@bp.before_request
+def before_request():
+    # TODO: move me to a separate blueprint for general functions, along with datetime import
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        db.session.commit()
