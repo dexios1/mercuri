@@ -4,6 +4,8 @@ from mercuri.config import Config
 from flask_login import LoginManager
 import logging
 from logging.handlers import SMTPHandler
+from logging.handlers import RotatingFileHandler
+import os
 
 login = LoginManager()
 
@@ -48,7 +50,7 @@ def create_app(test_config=None):
             # send error logs to file
             if not os.path.exists('logs'):
                 os.mkdir('logs')
-            file_handler = RotatingFileHandler('logs/microblog.log', maxBytes=10240,
+            file_handler = RotatingFileHandler('logs/mercuri.log', maxBytes=10240,
                                                backupCount=10)
             file_handler.setFormatter(logging.Formatter(
                 '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
