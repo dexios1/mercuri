@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
+    {% block head %} {% endblock %}
 </head>
 <body>
 <div>
@@ -28,6 +29,8 @@
 <hr>
 
 {% block content %} {% endblock %}
+
+{% block scripts %} {% endblock %}
 
 </body>
 </html>
