@@ -17,6 +17,10 @@ from mercuri import login
 login.init_app(app)
 login.login_view = 'auth.login'
 
+# configure Mail
+from mercuri.helpers.email import mail
+mail.init_app(app)
+
 
 init_error_handlers(app, db)
 # configure sentry
