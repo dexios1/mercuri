@@ -1,13 +1,17 @@
-import os
-from flask import Flask
+from flask import Flask, current_app, request
 from mercuri.config import Config
 from flask_login import LoginManager
+from flask_babel import Babel
 import logging
 from logging.handlers import SMTPHandler
 from logging.handlers import RotatingFileHandler
 import os
+import sentry_sdk
+
 
 login = LoginManager()
+babel = Babel()
+# TODO: continue adding babel to the app
 
 
 def create_app(test_config=None):
@@ -28,8 +32,16 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    # initialize extensions used in app
+    babel.init_app(app)
+    # configure sentry
+    sentry_sdk.init(app.config['SENTRY_URL'])
+
     from mercuri.blueprints import auth
     app.register_blueprint(auth)
+
+    from mercuri.helpers.errors import bp as errors_bp
+    app.register_blueprint(errors_bp)
 
     # send error logs to email
     if not app.debug:
@@ -61,4 +73,9 @@ def create_app(test_config=None):
             app.logger.info('Microblog startup')
 
     return app
+
+
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(current_app.config['LANGUAGES'])
 

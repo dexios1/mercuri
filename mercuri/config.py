@@ -14,3 +14,5 @@ class Config(object):
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['christopher.dare@st.vvu.edu.gh']
+    LANGUAGES = ['en', 'es']
+    SENTRY_URL = "https://bb0a3cdad37040938b082d9a446edfd7@sentry.io/1331904"
