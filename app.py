@@ -6,16 +6,10 @@ from flask_login import login_required
 
 
 app = create_app()
-from mercuri.models import db
-db.init_app(app)
-# register models and push migration
-from mercuri.models.user import User
-migrate = Migrate(app, db)
+
 
 # configure login Manager
-from mercuri import login
-login.init_app(app)
-login.login_view = 'auth.login'
+
 
 # configure Mail
 from mercuri.helpers.email import mail
