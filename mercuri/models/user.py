@@ -6,7 +6,7 @@ from hashlib import md5
 from datetime import datetime
 from time import time
 import jwt
-from flask import current_app as app
+from flask import url_for, current_app as app
 
 
 class User(UserMixin, db.Model):
@@ -42,6 +42,28 @@ class User(UserMixin, db.Model):
         except:
             return
         return User.query.get(id)
+
+    def to_dict(self, include_email=False):
+        data = {
+            'id': self.id,
+            'username': self.username,
+            'last_seen': self.last_seen.isoformat() + 'Z',
+            'about_me': self.about_me,
+            '_links': {
+                'self': url_for('api.get_user', id=self.id),
+                'avatar': self.avatar(128)
+            }
+        }
+        if include_email:
+            data['email'] = self.email
+        return data
+
+    def from_dict(self, data, new_user=False):
+        for field in ['username', 'email', 'about_me']:
+            if field in data:
+                setattr(self, field, data[field])
+        if new_user and 'password' in data:
+            self.set_password(data['password'])
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
