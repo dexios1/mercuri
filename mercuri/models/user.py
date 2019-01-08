@@ -43,14 +43,14 @@ class User(UserMixin, db.Model):
             return
         return User.query.get(id)
 
-    def to_dict(self, include_email=False):
+    def to_dict(self, include_email=False, api_version='api'):
         data = {
             'id': self.id,
             'username': self.username,
             'last_seen': self.last_seen.isoformat() + 'Z',
             'about_me': self.about_me,
             '_links': {
-                'self': url_for('api.get_user', id=self.id),
+                'self': url_for(api_version+'.get_user', id=self.id),
                 'avatar': self.avatar(128)
             }
         }
