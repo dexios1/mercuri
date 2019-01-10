@@ -11,7 +11,10 @@ def get_user(id):
 
 @bp.route('/users', methods=['GET'])
 def get_users():
-    pass
+    users = list()
+    for user in User.query.all():
+        users.append(user.to_dict(include_email=True))
+    return jsonify(users)
 
 
 @bp.route('/users', methods=['POST'])
