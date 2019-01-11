@@ -1,15 +1,23 @@
 from mercuri.api import bp
-from flask import request, jsonify, url_for
+from flask import request, jsonify, url_for, g, abort
 from mercuri.models.user import User, db
 from mercuri.api.errors import bad_request
+from mercuri.api.auth import token_auth
 
 
 @bp.route('/users/<int:id>', methods=['GET'])
+@token_auth.login_required
 def get_user(id):
-    return jsonify(User.query.get_or_404(id).to_dict(include_email=True))
+    include_email = False
+    # data = request.get_data() or {}
+    # if 'include_email' in data and 'include_email' == True:
+    #     include_email = True
+    #     print(include_email)
+    return jsonify(User.query.get_or_404(id).to_dict(include_email=include_email))
 
 
 @bp.route('/users', methods=['GET'])
+@token_auth.login_required
 def get_users():
     users = list()
     for user in User.query.all():
@@ -38,7 +46,11 @@ def create_user():
 
 
 @bp.route('/users/<int:id>', methods=['PUT'])
+@token_auth.login_required
 def update_user(id):
+    if g.current_user.id != id:
+        # we're not even gonna waste on the rest lol
+        abort(403)
     user = User.query.get_or_404(id)
     data = request.get_json() or {}
     if 'username' in data and data['username'] != user.username and \

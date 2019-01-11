@@ -62,6 +62,7 @@ flask-babel = "*"
 sentry-sdk = "*"
 flask-mail = "*"
 jwt = "*"
+flask-httpauth = "*"
 
 [requires]
 python_version = "3.6.7"
