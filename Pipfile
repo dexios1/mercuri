@@ -61,8 +61,8 @@ environs = "*"
 flask-babel = "*"
 sentry-sdk = "*"
 flask-mail = "*"
-jwt = "*"
 flask-httpauth = "*"
+pyjwt = "*"
 
 [requires]
 python_version = "3.6.7"
