@@ -51,6 +51,9 @@ def create_app(test_config=None):
     from mercuri.blueprints import auth
     app.register_blueprint(auth)
 
+    from mercuri.api import bp as api_bp
+    app.register_blueprint(api_bp, url_prefix='/api')
+
     init_error_handlers(app, db)
 
     # send error logs to email
