@@ -63,7 +63,7 @@ class User(UserMixin, db.Model):
             id = jwt.decode(token, app.config['SECRET_KEY'],
                             algorithms=['HS256'])['reset_password']
         except:
-            return
+            return None
         return User.query.get(id)
 
     def to_dict(self, include_email=False, api_version='api'):
