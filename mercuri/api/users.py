@@ -1,8 +1,10 @@
 from mercuri.api import bp
 from flask import request, jsonify, url_for, g, abort
 from mercuri.models.user import User, db
-from mercuri.api.errors import bad_request
+from mercuri.api.errors import bad_request, error_response
 from mercuri.api.auth import token_auth
+from mercuri.helpers.email import send_password_reset_email
+from mercuri.helpers.validators import validate_password
 
 
 @bp.route('/users/<int:id>', methods=['GET'])
@@ -62,3 +64,46 @@ def update_user(id):
     user.from_dict(data, new_user=False)
     db.session.commit()
     return jsonify(user.to_dict())
+
+
+@bp.route('/users/reset_password_request/', methods=['POST'])
+def send_password_reset_token():
+    app_url = "http://cellspace.co/reset_password/"
+    data = request.get_json() or {}
+    if data['app_url']:
+        app_url = data['app_url']
+    user = None
+    user_id = None
+    if 'email' in data:
+        user_id = "email"
+        user = User.query.filter_by(email=data['email']).first()
+    elif 'username' in data:
+        user_id = "username"
+        user = User.query.filter_by(username=data['username']).first()
+    if user:
+        print("attempting send password email")
+        send_password_reset_email(user, app_url=app_url)
+    response = jsonify(
+        {"status": "success", "id": user_id}
+    )
+    return response
+
+
+@bp.route('users/reset_password/<token>', methods=['POST'])
+def reset_password(token):
+    data = request.get_json() or {}
+    new_password = data['new_password']
+    if validate_password(new_password) is False:
+        error_response(401, message="Invalid password")
+    user = User.verify_reset_password_token(token)
+    if user and validate_password(new_password):
+        user.set_password(new_password)
+        db.session.commit()
+        response = jsonify(
+            {"status": "success"}
+        )
+        return response
+    else:
+        return error_response(401, message="Invalid token")
+
+
