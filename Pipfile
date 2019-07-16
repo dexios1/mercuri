@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 httpie = "*"
+pylint = "*"
 
 [packages]
 alembic = "==1.0.1"
